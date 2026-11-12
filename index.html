@@ -78,6 +78,12 @@ button{font-family:inherit;cursor:pointer}
   --bg-glow:rgba(42,157,143,.13);
   --bg-glow2:rgba(255,183,3,.12);
 }
+.slide[data-tema="biblio"]{
+  --accent:#7c5cbf;
+  --accent2:#ffb703;
+  --bg-glow:rgba(124,92,191,.14);
+  --bg-glow2:rgba(255,183,3,.11);
+}
 
 .slide-inner{position:relative;z-index:2;width:100%;max-width:1150px}
 .slide-inner.wide{max-width:1280px}
@@ -121,7 +127,6 @@ h1.slide-title .accent{
   color:#4a4551;line-height:1.62;
   margin-top:.9rem;max-width:75ch;
 }
-.lead b{color:var(--ink)}
 
 /* ============================================================
    CARDS — estilo cartolina
@@ -160,7 +165,6 @@ h1.slide-title .accent{
   line-height:1.55;
   color:#4a4551;
 }
-.card li b,.card p b{color:var(--ink)}
 
 ul.clean{list-style:none}
 ul.clean li{position:relative;padding-left:1.15rem;margin-bottom:.42rem}
@@ -193,7 +197,6 @@ ul.clean li::before{
   transform:rotate(-3deg);
   box-shadow:1px 1px 2px rgba(0,0,0,.15);
 }
-.highlight b{color:var(--ink)}
 
 .tag{
   display:inline-block;font-size:.68rem;font-weight:800;letter-spacing:.1em;
@@ -301,7 +304,15 @@ ul.clean li::before{
   text-transform:uppercase;color:var(--accent);font-weight:800;
   margin-bottom:.2rem;
 }
-.cred b{font-size:clamp(.78rem,1.05vw,.92rem);font-weight:800;color:var(--ink)}
+.cred-name{
+  display:inline-block;
+  font-size:clamp(.78rem,1.05vw,.92rem);
+  font-weight:normal;
+  color:var(--ink);
+  border-bottom:2px solid var(--accent);
+  padding-bottom:1px;
+  letter-spacing:.01em;
+}
 .hint{
   margin-top:clamp(18px,3vh,34px);
   font-size:.78rem;color:var(--muted);
@@ -430,7 +441,6 @@ ul.clean li::before{
 .game-overlay.hidden{opacity:0;visibility:hidden;pointer-events:none}
 .game-overlay h4{font-size:clamp(1rem,1.7vw,1.35rem);font-weight:900;color:#fff;font-family:var(--font-display)}
 .game-overlay p{font-size:clamp(.7rem,1vw,.82rem);color:#b9afa4;max-width:36ch;line-height:1.5}
-.game-overlay p b{color:#fff}
 
 .game-btn{
   margin-top:.4rem;
@@ -444,7 +454,9 @@ ul.clean li::before{
 .game-btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink);filter:brightness(1.05)}
 .game-btn:active{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--ink)}
 
-/* Cabo de Guerra */
+/* ============================================================
+   CABO DE GUERRA — CENA VISUAL
+   ============================================================ */
 .tug-wrap{position:relative;padding:0 0 4px}
 .tug-teams{
   display:flex;justify-content:space-between;
@@ -453,32 +465,104 @@ ul.clean li::before{
 }
 .tug-teams .you{color:#4ade80}
 .tug-teams .foe{color:#f87171}
-.tug-track{
-  position:relative;height:clamp(28px,4.2vh,40px);border-radius:999px;
+
+/* Cena */
+.tug-scene-wrap{
+  position:relative;
+  height:150px;
   background:
-    linear-gradient(90deg, rgba(74,222,128,.18) 0%, rgba(255,255,255,.06) 45%, rgba(255,255,255,.06) 55%, rgba(248,113,113,.18) 100%);
-  border:2px solid rgba(255,255,255,.14);
+    radial-gradient(ellipse at 50% 100%, rgba(255,183,3,.08), transparent 70%),
+    linear-gradient(180deg, #221a2b 0%, #1a1520 65%, #2a1e2a 100%);
+  border:2px solid rgba(255,255,255,.1);
+  border-radius:12px;
   overflow:hidden;
 }
-.tug-track::before{
-  content:'';position:absolute;left:50%;top:-4px;bottom:-4px;width:2px;
-  transform:translateX(-50%);
-  background:repeating-linear-gradient(180deg,#fff 0 5px,transparent 5px 10px);
-  opacity:.45;
+/* chão */
+.tug-scene-wrap::after{
+  content:'';
+  position:absolute;
+  left:0; right:0; bottom:0;
+  height:16px;
+  background:
+    repeating-linear-gradient(90deg,
+      #4a3530 0 8px,
+      #3a2520 8px 16px);
+  box-shadow:0 -1px 3px rgba(0,0,0,.4) inset;
+  z-index:1;
 }
-.tug-rope{
-  position:absolute;left:2%;right:2%;top:50%;height:6px;transform:translateY(-50%);
+/* linhas de meta */
+.tug-goal{
+  position:absolute;
+  top:0;
+  bottom:16px;
+  width:0;
+  border-left:2.5px dashed rgba(255,255,255,.45);
+  z-index:2;
+  pointer-events:none;
+  filter:drop-shadow(0 0 4px rgba(255,255,255,.2));
+}
+.tug-goal-left { left: 28%; }
+.tug-goal-right{ right: 28%; }
+
+/* cena que desliza */
+.tug-scene{
+  position:absolute;inset:0;
+  transform:translateX(0%);
+  transition:transform .05s linear;
+  will-change:transform;
+  z-index:3;
+}
+
+/* corda */
+.tug-rope-line{
+  position:absolute;
+  left:0; right:0;
+  bottom:56px;
+  height:5px;
+  background:
+    repeating-linear-gradient(90deg,
+      #b08968 0 7px,
+      #8a6a4f 7px 14px);
+  box-shadow:0 1px 3px rgba(0,0,0,.5);
   border-radius:3px;
-  background:repeating-linear-gradient(90deg,#b08968 0 7px,#8a6a4f 7px 14px);
-  opacity:.6;
+  z-index:1;
 }
+
+/* nó */
 .tug-knot{
-  position:absolute;top:50%;left:50%;width:20px;height:20px;border-radius:50%;
-  transform:translate(-50%,-50%);
-  background:radial-gradient(circle at 35% 30%,#fff,#ffb703 55%,#b06f00);
-  box-shadow:0 0 18px #ffb703, 0 2px 6px rgba(0,0,0,.6);
-  transition:left .07s linear;z-index:3;
+  position:absolute;
+  left:50%;
+  bottom:51px;
+  width:16px;height:16px;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #fff, #ffb703 55%, #b06f00);
+  box-shadow:0 0 16px #ffb703, 0 2px 5px rgba(0,0,0,.7);
+  transform:translateX(-50%);
+  z-index:2;
 }
+
+/* times de bonecos */
+.tug-team{
+  position:absolute;
+  bottom:16px;
+  display:flex;
+  align-items:flex-end;
+  gap:0;
+  z-index:3;
+}
+.tug-team-left { left: 6px;  color:#4ade80; }
+.tug-team-right{ right:6px;  color:#f87171; }
+
+/* bonecos */
+.boneco{
+  width:26px;
+  height:78px;
+  flex-shrink:0;
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,.65));
+}
+.boneco.flipped{ transform: scaleX(-1); }
+
+/* ritmo de batida */
 .tug-rhythm{
   position:relative;height:clamp(20px,2.8vh,28px);margin-top:12px;border-radius:999px;
   background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.12);
@@ -506,7 +590,7 @@ ul.clean li::before{
 .tug-btn.pop{animation:tugPop .18s ease}
 @keyframes tugPop{50%{transform:scale(.93);filter:brightness(1.4)}}
 .tug-flash{
-  position:absolute;left:50%;top:34%;transform:translate(-50%,-50%) scale(.6);
+  position:absolute;left:50%;top:24%;transform:translate(-50%,-50%) scale(.6);
   font-weight:900;font-size:clamp(.85rem,1.4vw,1.1rem);letter-spacing:.06em;
   text-transform:uppercase;pointer-events:none;opacity:0;z-index:8;
   text-shadow:0 2px 12px rgba(0,0,0,.9);
@@ -553,13 +637,45 @@ ul.clean li::before{
   transform:translate(2px,2px);
   box-shadow:2px 2px 0 var(--accent);
 }
+
+/* ============================================================
+   BIBLIOGRAFIA
+   ============================================================ */
+.refs-slide{
+  list-style:none;padding:0;margin:.3rem 0 0;
+}
+.refs-slide li{
+  font-size:clamp(.75rem,.98vw,.88rem);
+  line-height:1.55;
+  color:#4a4551;
+  padding:.75rem 0;
+  border-bottom:1px dashed rgba(45,42,50,.18);
+  text-align:justify;
+}
+.refs-slide li:first-child{padding-top:.3rem}
+.refs-slide li:last-child{border-bottom:none;padding-bottom:.3rem}
+.ref-author{
+  color:var(--accent);
+  letter-spacing:.02em;
+  font-size:.95em;
+}
+.refs-slide li em{color:#3a3520;font-style:italic}
+.refs-slide li .url{
+  color:#2a6f97;word-break:break-all;
+  font-family:'Consolas','Courier New',monospace;font-size:.88em;
+  text-decoration:underline;
+  text-underline-offset:2px;
+}
+.refs-slide li .local{
+  color:#6b6570;font-style:italic;
+}
 </style>
 </head>
 <body>
 
 <!-- ================= PROGRESSO / NAVEGAÇÃO ================= -->
 <div class="progress" id="progress"></div>
-<div class="counter"><b id="curNum">1</b> / <span id="totNum">13</span></div>
+<div class="counter"><b id="curNum">1</b> / <span id="totNum">14</span></div>
 <button class="nav-btn nav-prev" id="btnPrev" aria-label="Slide anterior">&#10094;</button>
 <button class="nav-btn nav-next" id="btnNext" aria-label="Próximo slide">&#10095;</button>
 <div class="dots" id="dots"></div>
@@ -572,7 +688,6 @@ ul.clean li::before{
   <div class="slide-inner">
     <div class="cover">
       <div class="logo-slot" id="logoSlot">
-        <!-- ⬇️ Troque o arquivo "logo-colegio.png" pelo logo real do colégio -->
         <img id="colegioLogo" src="logo.png" alt="Logo do Colégio Objetivo Biritiba Mirim">
         <span class="logo-fallback">COB<small>Biritiba&nbsp;Mirim</small></span>
       </div>
@@ -586,9 +701,9 @@ ul.clean li::before{
         <p class="sub">Brincadeiras populares, esportes recreativos e habilidades desenvolvidas</p>
 
         <div class="creditos">
-          <div class="cred"><span>Professor</span><b>Caio</b></div>
-          <div class="cred"><span>Alunos</span><b>Murilo Raul Melo Silva</b></div>
-          <div class="cred"><span>&nbsp;</span><b>Davi dos Santos Pontes Moraes</b></div>
+          <div class="cred"><span>Professor</span><span class="cred-name">Caio</span></div>
+          <div class="cred"><span>Aluno</span><span class="cred-name">Murilo Raul Melo Silva</span></div>
+          <div class="cred"><span>Aluno</span><span class="cred-name">Davi dos Santos Pontes Moraes</span></div>
         </div>
 
         <div class="hint">
@@ -609,7 +724,7 @@ ul.clean li::before{
     <h1 class="slide-title">Queimada <span class="accent">(ou Caçador / Baleado)</span></h1>
     <p class="lead">
       Uma das brincadeiras populares e esportes recreativos mais tradicionais do Brasil,
-      que combina <b>agilidade, estratégia, mira e trabalho em equipe</b>.
+      que combina agilidade, estratégia, mira e trabalho em equipe.
     </p>
 
     <div class="grid grid-3">
@@ -619,7 +734,7 @@ ul.clean li::before{
       </div>
       <div class="card">
         <h3><span class="ico">🎯</span> O objetivo</h3>
-        <p><b>“Queimar”</b> (atingir com a bola) os jogadores adversários para eliminá-los do jogo.</p>
+        <p>“Queimar” (atingir com a bola) os jogadores adversários para eliminá-los do jogo.</p>
       </div>
       <div class="card">
         <h3><span class="ico">⚡</span> Muito dinâmica</h3>
@@ -628,7 +743,7 @@ ul.clean li::before{
     </div>
 
     <div class="highlight">
-      <b>Em resumo:</b> é um jogo de arremesso e esquiva em que pensar rápido e jogar em equipe
+      Em resumo: é um jogo de arremesso e esquiva em que pensar rápido e jogar em equipe
       vale tanto quanto ter boa pontaria.
     </div>
   </div>
@@ -648,9 +763,9 @@ ul.clean li::before{
         <span class="tag">Raízes históricas</span>
         <h3><span class="ico">🏯</span> China antiga</h3>
         <ul class="clean">
-          <li>Acredita-se que o jogo tenha origens milenares na <b>China antiga</b>.</li>
-          <li>Versões iniciais eram praticadas para <b>treinar reflexos de guerreiros</b>.</li>
-          <li>Evoluiu para o jogo moderno conhecido em inglês como <b>Dodgeball</b>.</li>
+          <li>Acredita-se que o jogo tenha origens milenares na China antiga.</li>
+          <li>Versões iniciais eram praticadas para treinar reflexos de guerreiros.</li>
+          <li>Evoluiu para o jogo moderno conhecido em inglês como Dodgeball.</li>
         </ul>
       </div>
 
@@ -658,15 +773,15 @@ ul.clean li::before{
         <span class="tag">Chegada ao Brasil</span>
         <h3><span class="ico">🇧🇷</span> Escolas brasileiras</h3>
         <ul class="clean">
-          <li>Popularizou-se nas escolas ao longo do <b>século XX</b>, nas aulas de Educação Física.</li>
-          <li>Adaptou-se com diferentes <b>nomes regionais</b>: Caçador, Baleado, Queimada…</li>
+          <li>Popularizou-se nas escolas ao longo do século XX, nas aulas de Educação Física.</li>
+          <li>Adaptou-se com diferentes nomes regionais: Caçador, Baleado, Queimada…</li>
           <li>Hoje é uma das brincadeiras mais presentes no recreio e nas aulas.</li>
         </ul>
       </div>
     </div>
 
     <div class="highlight">
-      <b>Curiosidade:</b> o mesmo jogo recebe nomes diferentes em cada região do Brasil —
+      Curiosidade: o mesmo jogo recebe nomes diferentes em cada região do Brasil —
       mas a essência (queimar o adversário com a bola) é sempre a mesma.
     </div>
   </div>
@@ -682,26 +797,26 @@ ul.clean li::before{
     <h1 class="slide-title">Objetivo e <span class="accent">Regras Básicas</span></h1>
 
     <div class="highlight" style="margin-top:1rem">
-      <b>Objetivo:</b> eliminar todos os jogadores da equipe adversária atingindo-os com a bola,
+      Objetivo: eliminar todos os jogadores da equipe adversária atingindo-os com a bola,
       ou ter o maior número de jogadores salvos no final do tempo limite.
     </div>
 
     <div class="grid grid-3">
       <div class="card">
         <h3><span class="ico">📐</span> Divisão de campo</h3>
-        <p>A quadra é dividida em <b>duas metades</b> (uma para cada time) e um <b>“fundo”</b>
+        <p>A quadra é dividida em duas metades (uma para cada time) e um “fundo”
         (ou “cemitério”) atrás do campo adversário.</p>
       </div>
       <div class="card">
         <h3><span class="ico">🔥</span> Como queimar</h3>
-        <p>A bola deve atingir o adversário <b>abaixo da linha dos ombros</b> (a cabeça é proibida por
-        segurança) e cair no chão. Se o jogador <b>agarrar a bola no ar</b>, não é queimado — e quem
+        <p>A bola deve atingir o adversário abaixo da linha dos ombros (a cabeça é proibida por
+        segurança) e cair no chão. Se o jogador agarrar a bola no ar, não é queimado — e quem
         arremessou pode ir para o fundo.</p>
       </div>
       <div class="card">
         <h3><span class="ico">🔒</span> Prisioneiros</h3>
-        <p>Quem é queimado vai para a <b>área de fundo do time adversário</b> e pode tentar
-        queimar de lá para <b>voltar ao jogo</b>.</p>
+        <p>Quem é queimado vai para a área de fundo do time adversário e pode tentar
+        queimar de lá para voltar ao jogo.</p>
       </div>
     </div>
   </div>
@@ -720,15 +835,15 @@ ul.clean li::before{
     <div class="grid grid-3">
       <div class="card">
         <h3><span class="ico">⚽</span> Bola</h3>
-        <p>Geralmente uma <b>bola de borracha leve</b>, de tamanho médio, que não machuque ao impactar.</p>
+        <p>Geralmente uma bola de borracha leve, de tamanho médio, que não machuque ao impactar.</p>
       </div>
       <div class="card">
         <h3><span class="ico">📏</span> Delimitação de espaço</h3>
-        <p><b>Giz, cones ou marcações no chão</b> para dividir a quadra e definir o “cemitério/fundo”.</p>
+        <p>Giz, cones ou marcações no chão para dividir a quadra e definir o “cemitério/fundo”.</p>
       </div>
       <div class="card">
         <h3><span class="ico">👟</span> Vestuário</h3>
-        <p><b>Roupas leves</b> e <b>tênis confortáveis</b> para corridas e saltos com segurança.</p>
+        <p>Roupas leves e tênis confortáveis para corridas e saltos com segurança.</p>
       </div>
     </div>
   </div>
@@ -744,9 +859,9 @@ ul.clean li::before{
     <h1 class="slide-title">Curiosidades e <span class="accent">Variações</span></h1>
 
     <div class="highlight" style="margin-top:1rem">
-      <b>Curiosidade:</b> o esporte ganhou visibilidade mundial com o filme de comédia
-      <b>Dodgeball: A True Underdog Story (2004)</b> e hoje possui até campeonatos internacionais
-      oficiais (<b>World Dodgeball Federation</b>).
+      Curiosidade: o esporte ganhou visibilidade mundial com o filme de comédia
+      Dodgeball: A True Underdog Story (2004) e hoje possui até campeonatos internacionais
+      oficiais (World Dodgeball Federation).
     </div>
 
     <div class="grid grid-3">
@@ -760,7 +875,7 @@ ul.clean li::before{
       </div>
       <div class="card">
         <h3><span class="ico">♻️</span> Realeza</h3>
-        <p>Quem queima o adversário ganha o direito de <b>salvar um colega do fundo</b>.</p>
+        <p>Quem queima o adversário ganha o direito de salvar um colega do fundo.</p>
       </div>
     </div>
   </div>
@@ -780,15 +895,15 @@ ul.clean li::before{
         <div class="card mini">
           <h3><span class="ico">🏃</span> Motoras</h3>
           <ul class="clean">
-            <li><b>Coordenação visomotora:</b> precisão no arremesso e tempo de reação para desviar.</li>
-            <li><b>Resistência e agilidade:</b> piques rápidos, saltos e mudanças de direção.</li>
+            <li>Coordenação visomotora: precisão no arremesso e tempo de reação para desviar.</li>
+            <li>Resistência e agilidade: piques rápidos, saltos e mudanças de direção.</li>
           </ul>
         </div>
         <div class="card mini">
           <h3><span class="ico">🤝</span> Sociais</h3>
           <ul class="clean">
-            <li><b>Trabalho em equipe:</b> comunicação constante para armar jogadas e proteger os colegas.</li>
-            <li><b>Respeito às regras e empatia:</b> lidar com vitórias, derrotas e a segurança dos colegas.</li>
+            <li>Trabalho em equipe: comunicação constante para armar jogadas e proteger os colegas.</li>
+            <li>Respeito às regras e empatia: lidar com vitórias, derrotas e a segurança dos colegas.</li>
           </ul>
         </div>
       </div>
@@ -809,7 +924,7 @@ ul.clean li::before{
             <p id="qOverlayText">
               Elimine os 5 adversários. Clique na quadra para mirar e arremessar.
               Use as setas ↑ ↓ para desviar das bolas inimigas.
-              <br><b>Atenção:</b> acertar a cabeça não vale!
+              <br>Atenção: acertar a cabeça não vale!
             </p>
             <button class="game-btn" id="qStartBtn">▶ Começar</button>
           </div>
@@ -828,23 +943,23 @@ ul.clean li::before{
     <div class="kicker">Parte 2 · Cabo de Guerra · Slide 7</div>
     <h1 class="slide-title">Cabo de Guerra <span class="accent">(Tug of War)</span></h1>
     <p class="lead">
-      Uma prova clássica de <b>força física, resistência e estratégia coletiva</b>, onde duas equipes
+      Uma prova clássica de força física, resistência e estratégia coletiva, onde duas equipes
       puxam uma corda em direções opostas.
     </p>
 
     <div class="grid grid-3">
       <div class="card">
         <h3><span class="ico">🪢</span> Competição direta</h3>
-        <p>Prova de <b>tração</b> entre duas equipes, uma de cada lado da corda.</p>
+        <p>Prova de tração entre duas equipes, uma de cada lado da corda.</p>
       </div>
       <div class="card">
         <h3><span class="ico">🏁</span> Quem vence</h3>
         <p>Vence a equipe que conseguir puxar o time rival para o seu lado,
-        ultrapassando a <b>marca central</b>.</p>
+        ultrapassando a marca central.</p>
       </div>
       <div class="card">
         <h3><span class="ico">🥁</span> Sincronia</h3>
-        <p>Exige <b>pulsação e sincronia em equipe</b> mais do que apenas força bruta individual.</p>
+        <p>Exige pulsação e sincronia em equipe mais do que apenas força bruta individual.</p>
       </div>
     </div>
   </div>
@@ -864,8 +979,8 @@ ul.clean li::before{
         <span class="tag">Raízes na Antiguidade</span>
         <h3><span class="ico">🏛️</span> Egito, Grécia e China</h3>
         <ul class="clean">
-          <li>Praticado no <b>Egito Antigo</b>, na <b>Grécia</b> e na <b>China antiga</b>.</li>
-          <li>Usado em <b>treinamentos militares</b> e em <b>rituais tradicionais e religiosos</b>.</li>
+          <li>Praticado no Egito Antigo, na Grécia e na China antiga.</li>
+          <li>Usado em treinamentos militares e em rituais tradicionais e religiosos.</li>
         </ul>
       </div>
 
@@ -873,9 +988,9 @@ ul.clean li::before{
         <span class="tag">História Olímpica</span>
         <h3><span class="ico">🏅</span> Esporte olímpico</h3>
         <ul class="clean">
-          <li>Foi esporte olímpico oficial entre <b>Paris (1900)</b> e <b>Antuérpia (1920)</b>.</li>
-          <li>Depois foi retirado devido a reestruturações do <b>Comitê Olímpico Internacional</b>.</li>
-          <li>Hoje é reconhecido pela <b>TWGA</b> (Associação Mundial de Jogos Não-Olímpicos).</li>
+          <li>Foi esporte olímpico oficial entre Paris (1900) e Antuérpia (1920).</li>
+          <li>Depois foi retirado devido a reestruturações do Comitê Olímpico Internacional.</li>
+          <li>Hoje é reconhecido pela TWGA (Associação Mundial de Jogos Não-Olímpicos).</li>
         </ul>
       </div>
     </div>
@@ -892,24 +1007,24 @@ ul.clean li::before{
     <h1 class="slide-title">Objetivo e <span class="accent">Regras Básicas</span></h1>
 
     <div class="highlight" style="margin-top:1rem">
-      <b>Objetivo:</b> puxar a equipe adversária em direção ao seu lado, fazendo com que a
-      <b>marca central da corda</b> ultrapasse a linha limite demarcada no chão.
+      Objetivo: puxar a equipe adversária em direção ao seu lado, fazendo com que a
+      marca central da corda ultrapasse a linha limite demarcada no chão.
     </div>
 
     <div class="grid grid-3">
       <div class="card">
         <h3><span class="ico">🧍</span> Posicionamento</h3>
-        <p>Os participantes seguram a corda e o último competidor (<b>âncora</b>) costuma enrolá-la
-        ao redor do corpo, respeitando as <b>restrições de segurança modernas</b>.</p>
+        <p>Os participantes seguram a corda e o último competidor (âncora) costuma enrolá-la
+        ao redor do corpo, respeitando as restrições de segurança modernas.</p>
       </div>
       <div class="card">
         <h3><span class="ico">🔔</span> Início</h3>
-        <p>Ao sinal do <b>árbitro</b>, ambas as equipes começam a puxar <b>simultaneamente</b>.</p>
+        <p>Ao sinal do árbitro, ambas as equipes começam a puxar simultaneamente.</p>
       </div>
       <div class="card">
         <h3><span class="ico">🚫</span> Proibições</h3>
-        <p>É proibido <b>amarrar a corda ao corpo de forma fixa</b> (em algumas modalidades oficiais)
-        ou <b>sentar-se no chão</b> intencionalmente para travar o peso.</p>
+        <p>É proibido amarrar a corda ao corpo de forma fixa (em algumas modalidades oficiais)
+        ou sentar-se no chão intencionalmente para travar o peso.</p>
       </div>
     </div>
   </div>
@@ -928,17 +1043,17 @@ ul.clean li::before{
     <div class="grid grid-3">
       <div class="card">
         <h3><span class="ico">🪢</span> Corda</h3>
-        <p>Corda <b>longa, grossa e resistente</b> — geralmente de <b>cânhamo, sisal</b> ou
-        <b>fibra sintética macia</b>, para não machucar as mãos.</p>
+        <p>Corda longa, grossa e resistente — geralmente de cânhamo, sisal ou
+        fibra sintética macia, para não machucar as mãos.</p>
       </div>
       <div class="card">
         <h3><span class="ico">🎗️</span> Marcação</h3>
-        <p><b>Fita colorida ou lenço</b> amarrado exatamente no centro da corda, além de
-        <b>linhas desenhadas no chão</b>.</p>
+        <p>Fita colorida ou lenço amarrado exatamente no centro da corda, além de
+        linhas desenhadas no chão.</p>
       </div>
       <div class="card">
         <h3><span class="ico">🧤</span> Proteção (opcional)</h3>
-        <p><b>Luvas leves</b> para evitar calos, dependendo da intensidade da disputa.</p>
+        <p>Luvas leves para evitar calos, dependendo da intensidade da disputa.</p>
       </div>
     </div>
   </div>
@@ -954,20 +1069,20 @@ ul.clean li::before{
     <h1 class="slide-title">Curiosidades e <span class="accent">Variações</span></h1>
 
     <div class="highlight" style="margin-top:1rem">
-      <b>Curiosidade:</b> em <b>1908</b>, a equipe britânica da <b>Polícia de Liverpool</b> ganhou o
+      Curiosidade: em 1908, a equipe britânica da Polícia de Liverpool ganhou o
       ouro olímpico no cabo de guerra usando botas tão pesadas e com tachas que os adversários
-      protestaram alegando vantagem injusta — <b>mas o recurso foi negado</b>.
+      protestaram alegando vantagem injusta — mas o recurso foi negado.
     </div>
 
     <div class="grid grid-2">
       <div class="card">
         <h3><span class="ico">🟤</span> Cabo de Guerra na Lama</h3>
-        <p>Muito comum em <b>gincanas escolares</b> e <b>festivais rurais</b>, aumentando a
+        <p>Muito comum em gincanas escolares e festivais rurais, aumentando a
         dificuldade e a diversão.</p>
       </div>
       <div class="card">
         <h3><span class="ico">✚</span> Cabo de Guerra Circular</h3>
-        <p><b>Quatro equipes</b> puxando uma corda em formato de cruz a partir de um centro comum.</p>
+        <p>Quatro equipes puxando uma corda em formato de cruz a partir de um centro comum.</p>
       </div>
     </div>
   </div>
@@ -975,7 +1090,7 @@ ul.clean li::before{
 
 
 <!-- ============================================================
-     12 · CABO DE GUERRA — HABILIDADES + SIMULADOR + BOTÃO
+     12 · CABO DE GUERRA — HABILIDADES + SIMULADOR
      ============================================================ -->
 <section class="slide" data-tema="cabo">
   <div class="slide-inner wide">
@@ -987,15 +1102,15 @@ ul.clean li::before{
         <div class="card mini">
           <h3><span class="ico">💪</span> Motoras</h3>
           <ul class="clean">
-            <li><b>Força isométrica e dinâmica:</b> membros superiores, tronco, pernas e resistência muscular localizada.</li>
-            <li><b>Equilíbrio e postura:</b> manutenção da base firme contra a tração oposta.</li>
+            <li>Força isométrica e dinâmica: membros superiores, tronco, pernas e resistência muscular localizada.</li>
+            <li>Equilíbrio e postura: manutenção da base firme contra a tração oposta.</li>
           </ul>
         </div>
         <div class="card mini">
           <h3><span class="ico">🤝</span> Sociais</h3>
           <ul class="clean">
-            <li><b>Sincronia e ritmo:</b> a importância de puxar juntos (contagens como “1, 2, 3, Puxa!”).</li>
-            <li><b>Espírito de união e resiliência:</b> superar o cansaço em prol do objetivo coletivo.</li>
+            <li>Sincronia e ritmo: a importância de puxar juntos (contagens como “1, 2, 3, Puxa!”).</li>
+            <li>Espírito de união e resiliência: superar o cansaço em prol do objetivo coletivo.</li>
           </ul>
         </div>
       </div>
@@ -1010,10 +1125,89 @@ ul.clean li::before{
 
           <div class="tug-wrap">
             <div class="tug-teams"><span class="you">Você</span><span class="foe">Rival</span></div>
-            <div class="tug-track">
-              <div class="tug-rope"></div>
-              <div class="tug-knot" id="tugKnot"></div>
+
+            <div class="tug-scene-wrap">
+              <div class="tug-goal tug-goal-left"></div>
+              <div class="tug-goal tug-goal-right"></div>
+
+              <div class="tug-scene" id="tugScene">
+                <div class="tug-rope-line"></div>
+                <div class="tug-knot" id="tugKnot"></div>
+
+                <!-- Time esquerdo (você) — 4 bonecos verdes -->
+                <div class="tug-team tug-team-left">
+                  <svg class="boneco" viewBox="0 0 26 78" aria-hidden="true">
+                    <circle cx="13" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2.5"/>
+                    <line x1="13" y1="19" x2="13" y2="48" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="26" x2="24" y2="33" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="30" x2="23" y2="38" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="48" x2="5" y2="72" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="48" x2="21" y2="72" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                  </svg>
+                  <svg class="boneco" viewBox="0 0 26 78" aria-hidden="true">
+                    <circle cx="13" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2.5"/>
+                    <line x1="13" y1="19" x2="13" y2="48" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="26" x2="24" y2="33" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="30" x2="23" y2="38" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="48" x2="5" y2="72" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="48" x2="21" y2="72" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                  </svg>
+                  <svg class="boneco" viewBox="0 0 26 78" aria-hidden="true">
+                    <circle cx="13" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2.5"/>
+                    <line x1="13" y1="19" x2="13" y2="48" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="26" x2="24" y2="33" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="30" x2="23" y2="38" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="48" x2="5" y2="72" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="48" x2="21" y2="72" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                  </svg>
+                  <svg class="boneco" viewBox="0 0 26 78" aria-hidden="true">
+                    <circle cx="13" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2.5"/>
+                    <line x1="13" y1="19" x2="13" y2="48" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="26" x2="24" y2="33" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="30" x2="23" y2="38" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="48" x2="5" y2="72" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="48" x2="21" y2="72" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                  </svg>
+                </div>
+
+                <!-- Time direito (rival) — 4 bonecos vermelhos espelhados -->
+                <div class="tug-team tug-team-right">
+                  <svg class="boneco flipped" viewBox="0 0 26 78" aria-hidden="true">
+                    <circle cx="13" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2.5"/>
+                    <line x1="13" y1="19" x2="13" y2="48" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="26" x2="24" y2="33" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="30" x2="23" y2="38" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="48" x2="5" y2="72" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="48" x2="21" y2="72" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                  </svg>
+                  <svg class="boneco flipped" viewBox="0 0 26 78" aria-hidden="true">
+                    <circle cx="13" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2.5"/>
+                    <line x1="13" y1="19" x2="13" y2="48" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="26" x2="24" y2="33" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="30" x2="23" y2="38" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="48" x2="5" y2="72" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="48" x2="21" y2="72" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                  </svg>
+                  <svg class="boneco flipped" viewBox="0 0 26 78" aria-hidden="true">
+                    <circle cx="13" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2.5"/>
+                    <line x1="13" y1="19" x2="13" y2="48" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="26" x2="24" y2="33" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="30" x2="23" y2="38" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="48" x2="5" y2="72" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="48" x2="21" y2="72" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                  </svg>
+                  <svg class="boneco flipped" viewBox="0 0 26 78" aria-hidden="true">
+                    <circle cx="13" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="2.5"/>
+                    <line x1="13" y1="19" x2="13" y2="48" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="26" x2="24" y2="33" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="30" x2="23" y2="38" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="48" x2="5" y2="72" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="13" y1="48" x2="21" y2="72" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                  </svg>
+                </div>
+              </div>
             </div>
+
             <div class="tug-rhythm">
               <div class="tug-zone-good"></div>
               <div class="tug-zone-perfect"></div>
@@ -1026,16 +1220,79 @@ ul.clean li::before{
           <div class="game-overlay" id="tugOverlay">
             <h4 id="tugOverlayTitle">🪢 Simulador de Cabo de Guerra</h4>
             <p id="tugOverlayText">
-              A barra de baixo oscila. Aperte <b>PUXA!</b> (ou a barra de espaço)
-              quando o marcador branco estiver na <b>zona verde</b> — no centro dourado o puxão é ainda mais forte!
+              A barra de baixo oscila. Aperte PUXA! (ou a barra de espaço)
+              quando o marcador branco estiver na zona verde — no centro dourado o puxão é ainda mais forte!
             </p>
             <button class="game-btn" id="tugStartBtn">▶ Começar</button>
           </div>
         </div>
       </div>
     </div>
+  </div>
+</section>
 
-    <!-- Botão de retorno ao início -->
+
+<!-- ============================================================
+     13 · BIBLIOGRAFIA
+     ============================================================ -->
+<section class="slide" data-tema="biblio">
+  <div class="slide-inner wide">
+    <div class="kicker">Bibliografia · Referências</div>
+    <h1 class="slide-title">Referências <span class="accent">Bibliográficas</span></h1>
+    <p class="lead">
+      Fontes consultadas para a elaboração deste trabalho, organizadas por modalidade e
+      apresentadas em formato ABNT.
+    </p>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <h3><span class="ico">🪢</span> Cabo de Guerra</h3>
+        <ul class="refs-slide">
+          <li>
+            <span class="ref-author">FEDERAÇÃO INTERNACIONAL DE CABO DE GUERRA (TWIF).</span>
+            <em>História do cabo de guerra</em>.
+            <span class="local">[S. l.], [2024?]</span>.
+            Disponível em: <span class="url">tugofwar-twif.org</span>.
+          </li>
+          <li>
+            <span class="ref-author">COMITÊ OLÍMPICO INTERNACIONAL (COI).</span>
+            <em>Cabo de guerra: história dos Jogos Olímpicos (1900–1920)</em>.
+            Lausanne, [2024?].
+            Disponível em: <span class="url">olympics.com</span>.
+          </li>
+          <li>
+            <span class="ref-author">ASSOCIAÇÃO INTERNACIONAL DOS JOGOS MUNDIAIS (IWGA).</span>
+            <em>Cabo de guerra: programa esportivo</em>.
+            Lausanne, [2024?].
+            Disponível em: <span class="url">theworldgames.org</span>.
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3><span class="ico">⚔️</span> Queimada</h3>
+        <ul class="refs-slide">
+          <li>
+            <span class="ref-author">FEDERAÇÃO MUNDIAL DE DODGEBALL (WDBF).</span>
+            <em>Regras e regulamentos: regras oficiais da queimada (dodgeball)</em>.
+            <span class="local">[S. l.], [2024?]</span>.
+            Disponível em: <span class="url">worlddodgeballfederation.com</span>.
+          </li>
+          <li>
+            <span class="ref-author">ENCICLOPÉDIA BRITÂNICA.</span>
+            <em>Queimada (Dodgeball)</em>.
+            Chicago: Encyclopædia Britannica, Inc., [2024?].
+            Disponível em: <span class="url">britannica.com</span>.
+          </li>
+          <li>
+            <span class="ref-author">CASCUDO, Luís da Câmara.</span>
+            <em>Dicionário do folclore brasileiro</em>.
+            12. ed. São Paulo: Global, 2012.
+          </li>
+        </ul>
+      </div>
+    </div>
+
     <div class="final-cta">
       <button class="btn-inicio" id="btnInicio">🏠 Voltar ao início</button>
     </div>
@@ -1056,7 +1313,12 @@ const btnPrev  = document.getElementById('btnPrev');
 const btnNext  = document.getElementById('btnNext');
 const btnInicio= document.getElementById('btnInicio');
 
-const THEME_ACCENT = { capa:'#ff6b35', queimada:'#e63946', cabo:'#2a9d8f' };
+const THEME_ACCENT = {
+  capa:'#ff6b35',
+  queimada:'#e63946',
+  cabo:'#2a9d8f',
+  biblio:'#7c5cbf'
+};
 
 let cur = -1;
 
@@ -1098,7 +1360,6 @@ function go(n) {
 btnPrev.addEventListener('click', () => go(cur - 1));
 btnNext.addEventListener('click', () => go(cur + 1));
 
-/* Botão "Voltar ao início" do último slide */
 if (btnInicio) {
   btnInicio.addEventListener('click', () => go(0));
 }
@@ -1295,8 +1556,8 @@ const QueimadaGame = (function () {
     draw();
     els.ovTitle.textContent = win ? '🏆 Vitória!' : '💥 Você foi queimado!';
     els.ovText.innerHTML = win
-      ? 'Você eliminou os <b>5 adversários</b>! Agora é a vez do cemitério deles. 🔥'
-      : 'Suas 3 vidas acabaram. Desvie com <b>↑ ↓</b> e arremesse mais rápido. Tente de novo!';
+      ? 'Você eliminou os 5 adversários! Agora é a vez do cemitério deles. 🔥'
+      : 'Suas 3 vidas acabaram. Desvie com ↑ ↓ e arremesse mais rápido. Tente de novo!';
     els.startBtn.textContent = 'Jogar de novo';
     els.overlay.classList.remove('hidden');
   }
@@ -1540,7 +1801,7 @@ const QueimadaGame = (function () {
 
 
 /* ============================================================
-   3) SIMULADOR — CABO DE GUERRA
+   3) SIMULADOR — CABO DE GUERRA (cena com bonecos)
    ============================================================ */
 const CaboGame = (function () {
   const CICLO = 2.2;
@@ -1557,7 +1818,7 @@ const CaboGame = (function () {
     inited = true;
 
     els.panel      = document.getElementById('tugPanel');
-    els.knot       = document.getElementById('tugKnot');
+    els.scene      = document.getElementById('tugScene');
     els.marker     = document.getElementById('tugMarker');
     els.btn        = document.getElementById('tugBtn');
     els.pos        = document.getElementById('tugPos');
@@ -1646,9 +1907,10 @@ const CaboGame = (function () {
   }
 
   function render() {
-    if (!els.knot) return;
-    els.knot.style.left = ((100 - pos) / 2) + '%';
-    const voce  = Math.round((pos + 100) / 2);
+    if (!els.scene) return;
+    /* desloca a cena inteira: pos=+100 empurra tudo p/ esquerda (você ganha) */
+    els.scene.style.transform = 'translateX(' + (pos * -0.2) + '%)';
+    const voce = Math.round((pos + 100) / 2);
     els.pos.textContent    = voce + '%';
     els.posFoe.textContent = (100 - voce) + '%';
   }
@@ -1659,8 +1921,8 @@ const CaboGame = (function () {
 
     els.ovTitle.textContent = win ? '🏆 Vitória!' : '😤 O rival venceu!';
     els.ovText.innerHTML = win
-      ? 'Você puxou a corda até o seu lado! <b>Sincronia e ritmo</b> valem mais que força bruta.'
-      : 'O ritmo caiu… aperte <b>PUXA!</b> quando o marcador estiver na <b>zona verde</b> (ou dourada).';
+      ? 'Você puxou a corda até o seu lado! Sincronia e ritmo valem mais que força bruta.'
+      : 'O ritmo caiu… aperte PUXA! quando o marcador estiver na zona verde (ou dourada).';
     els.startBtn.textContent = 'Jogar de novo';
     els.overlay.classList.remove('hidden');
 
